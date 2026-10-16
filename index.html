@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="kk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#14865b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Money & Market">
+  <meta name="description" content="Жеке және дүкен депозиттерін интернетсіз есептеу">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="apple-touch-icon" href="./icon-180.png">
+  <link rel="icon" href="./icon-192.png" type="image/png">
+  <link rel="stylesheet" href="./style.css">
+  <title>Money & Market</title>
+</head>
+<body>
+<div id="app">
+  <header class="topbar">
+    <div class="brand"><span class="brandmark">₸</span><span><strong>Money & Market</strong><small>Екі депозит есебі</small></span></div>
+    <button id="themeBtn" class="icon-button" title="Тема ауыстыру" aria-label="Тема ауыстыру">☾</button>
+  </header>
+  <main class="shell" id="content" tabindex="-1"></main>
+  <nav class="bottomnav" aria-label="Бөлімдер">
+    <button data-page="home" class="active"><span class="navicon">⌂</span>Басты бет</button>
+    <button data-page="personal"><span class="navicon">◉</span>Жеке</button>
+    <button data-page="shop"><span class="navicon">▤</span>Дүкен</button>
+    <button data-page="stats"><span class="navicon">▥</span>Статистика</button>
+    <button data-page="categories"><span class="navicon">≡</span>Категория</button>
+  </nav>
+</div>
+<div id="overlay" hidden></div>
+<div id="toast" role="status" aria-live="polite" hidden></div>
+<script src="./app.js" defer></script>
+</body>
+</html>
