@@ -35,7 +35,16 @@ function balanceCard(account){return `<div class="card"><small>${ACCOUNT[account
 function actions(account){return `<div class="actions"><button class="btn primary" data-action="add" data-kind="income" ${account?'data-account="'+account+'"':''}>＋ Кіріс қосу</button><button class="btn" data-action="add" data-kind="expense" ${account?'data-account="'+account+'"':''}>− Шығыс қосу</button><button class="btn" data-action="add" data-kind="transfer" ${account?'data-account="'+account+'"':''}>⇄ Ақша ауыстыру</button></div>`}
 function rowHtml(t,account){const v=signed(t,account),name=catName(t),transferDetail=t.kind==='transfer'?(t.account===account?'→ '+ACCOUNT[t.to]:'← '+ACCOUNT[t.account]):KIND[t.kind];return `<button class="entry" data-action="detail" data-id="${esc(t.id)}" data-context="${account}"><div class="entry-main"><strong>${esc(name)}</strong><small>${shortDate(t.date)} · ${esc(transferDetail)}${t.note?' · '+esc(t.note):''}</small></div><span class="entry-value ${v>=0?'amount-green':'amount-red'}">${v>=0?'+':'−'}${money(Math.abs(v))}</span></button>`}
 function listHtml(rows,account){return `<div class="entry-list">${rows.length?rows.map(t=>rowHtml(t,account)).join(''):'<div class="empty">Әзірге операция жоқ</div>'}</div>`}
-function sortRows(rows){return [...rows].sort((a,b)=>b.date.localeCompare(a.date)||String(b.id).localeCompare(String(a.id)))}
+
+function sortRows(rows) {
+    return [...rows].sort((a, b) => {
+        const dateDiff = b.date.localeCompare(a.date);
+        if (dateDiff !== 0) return dateDiff;
+
+        return db.transactions.indexOf(b) -
+               db.transactions.indexOf(a);
+    });
+}
 function heading(title,subtitle){return `<div class="eyebrow">Money & Market</div><h1 class="page-title">${title}</h1><p class="lead">${subtitle}</p>`}
 function showHome(){const latest=sortRows(db.transactions.filter(t=>!t.deleted)).slice(0,10);return `${heading('Депозиттерге шолу','Бүгін: '+shortDate(iso()))}<div class="balance-grid">${balanceCard('personal')}${balanceCard('shop')}</div>${actions()}<div class="section-row"><h2>Соңғы 10 операция</h2></div>${latest.length?`<div class="entry-list">${latest.map(t=>rowHtml(t,t.account)).join('')}</div>`:listHtml([], 'personal')}<p class="notice">Барлық сомалар телефонның өзінде сақталады. Компьютермен автоматты синхрондау жоқ.</p>`}
 function showAccount(account){const s=statsFor(account,iso(),iso()),latest=sortRows(rowsFor(account)).slice(0,8);return `${heading(account==='personal'?'Жеке қаржы':'Дүкен',ACCOUNT[account]+' · Есеп')}<div class="card"><small>Қазіргі баланс</small><strong class="balance-amount amount-green">${money(balances(account))}</strong></div><div class="account-metrics"><div class="card"><small>Бүгінгі кіріс</small><strong class="metric-value amount-green">${money(s.inc)}</strong></div><div class="card"><small>Бүгінгі шығыс</small><strong class="metric-value amount-red">${money(s.out)}</strong></div></div>${actions(account)}<div class="section-row"><h2>Соңғы операциялар</h2><button class="btn mini" data-action="history" data-account="${account}">Толық тарих →</button></div>${listHtml(latest,account)}<div class="actions"><button class="btn full" data-action="history" data-account="${account}">Операциялар тарихын ашу</button></div>`}
